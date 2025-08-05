@@ -87,8 +87,11 @@ class M5Model:
         X = data_clean[feature_cols]
         y = data_clean[target_col]
         
-        # Converte para float32 para economizar memória
-        X = X.astype(np.float32)
+        # Converte apenas colunas numéricas para float32
+        numeric_cols = X.select_dtypes(include=[np.number]).columns
+        for col in numeric_cols:
+            X[col] = X[col].astype(np.float32)
+        
         y = y.astype(np.float32)
         
         return X, y
@@ -132,8 +135,7 @@ class M5Model:
             valid_sets=[train_data, val_data],
             valid_names=['train', 'valid'],
             num_boost_round=2000,
-            early_stopping_rounds=100,
-            verbose_eval=False
+            callbacks=[lgb.early_stopping(100), lgb.log_evaluation(0)]
         )
         
         # Predições

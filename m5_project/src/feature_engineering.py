@@ -153,9 +153,15 @@ class M5FeatureEngineer:
         for id_val in data['id'].unique():
             mask = data['id'] == id_val
             subset = data.loc[mask].copy()
-            subset['days_since_last_sale'] = subset['days_since_last_sale'].fillna(method='ffill')
-            subset['days_since_last_sale'] = subset.groupby(subset['days_since_last_sale'].isna().cumsum())['days_since_last_sale'].apply(lambda x: x.fillna(method='ffill') + np.arange(len(x)))
-            data.loc[mask, 'days_since_last_sale'] = subset['days_since_last_sale']
+            subset['days_since_last_sale'] = subset['days_since_last_sale'].ffill()
+            subset = subset.reset_index(drop=True)
+            groups = subset.groupby(subset['days_since_last_sale'].isna().cumsum())
+            for name, group in groups:
+                if not group['days_since_last_sale'].isna().all():
+                    group_filled = group['days_since_last_sale'].ffill()
+                    group_with_days = group_filled + np.arange(len(group))
+                    subset.loc[group.index, 'days_since_last_sale'] = group_with_days
+            data.loc[mask, 'days_since_last_sale'] = subset['days_since_last_sale'].values
         
         return data
     
