@@ -1,0 +1,34 @@
+# Arquivos de dados M5 (muito grandes para GitHub)
+m5-forecasting-accuracy/
+*.csv
+
+# Ambientes virtuais
+.venv/
+venv/
+env/
+
+# Arquivos de modelo salvos
+*.pkl
+*.joblib
+*.h5
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Outputs temporários
+m5_project/outputs/
+m5_project/models/
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE
+.vscode/
+.idea/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
